@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asia Wok Velbert</title>
+  <style>
+    :root {
+      --bg: #111;
+      --bg-soft: #1a1a1a;
+      --card: #222;
+      --card-2: #2a2a2a;
+      --text: #fff;
+      --muted: #d5d5d5;
+      --gold: #f1c40f;
+      --red: #8B0000;
+      --border: #3a3a3a;
+      --shadow: 0 10px 25px rgba(0,0,0,.28);
+      --radius: 16px;
+      --grey: #5a5a5a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(180deg, #101010 0%, #171717 100%);
+      color: var(--text);
+    }
+
+    header {
+      background: linear-gradient(135deg, #8B0000, #5a0000);
+      text-align: center;
+      padding: 30px 16px;
+      border-bottom: 4px solid var(--gold);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header h1 {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: 1px;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      color: #ffe9a8;
+      font-size: 0.95rem;
+    }
+
+    .container {
+      width: min(1240px, 92%);
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 160px;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .toolbar input,
+    .toolbar select,
+    .toolbar button {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .toolbar button {
+      cursor: pointer;
+      background: var(--red);
+      border-color: #a31414;
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+    .toolbar button:hover {
+      filter: brightness(1.08);
+      transform: scale(1.02);
+    }
+
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .summary h2 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 1.5rem;
+    }
+
+    .summary p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--card), #1d1d1d);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: #696969;
+      box-shadow: 0 15px 35px rgba(0,0,0,.4);
+    }
+
+    .card-image {
+      width: 100%;
+      height: 140px;
+      background: linear-gradient(135deg, #4a4a4a, #5a5a5a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #3a3a3a;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-content {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-top {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 1.05rem;
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    .price {
+      white-space: nowrap;
+      background: var(--red);
+      border: 1px solid #a31414;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      color: var(--gold);
+    }
+
+    .desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      min-height: 45px;
+      flex: 1;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: rgba(241,196,15,.12);
+      border: 1px solid rgba(241,196,15,.25);
+      color: #ffe08a;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 24px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-soft);
+      display: none;
+      grid-column: 1 / -1;
+      font-size: 1.1rem;
+    }
+
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.95);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      gap: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    .lightbox.show {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .lightbox-content {
+      width: min(90vw, 900px);
+      max-height: 70vh;
+      background: linear-gradient(135deg, #4a4a4a, #5a5a5a);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: #3a3a3a;
+      aspect-ratio: 16/9;
+    }
+
+    .lightbox-info {
+      color: white;
+      text-align: center;
+      max-width: 800px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .lightbox-info strong {
+      color: var(--gold);
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      font-size: 1.5rem;
+      cursor: pointer;
+      background: var(--red);
+      color: var(--gold);
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+    .close-btn:hover {
+      transform: rotate(90deg) scale(1.1);
+    }
+
+    footer {
+      background: linear-gradient(135deg, #8B0000, #5a0000);
+      text-align: center;
+      padding: 20px;
+      border-top: 4px solid var(--gold);
+      color: #ffe9a8;
+      margin-top: 40px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 900px) {
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .menu-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      .toolbar {
+        gap: 8px;
+      }
+
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🍜 Asia Wok Velbert</h1>
+    <p>Elberfelder Str. 59 · 42553 Velbert / Neviges</p>
+  </header>
+
+  <main class="container">
+    <div class="toolbar">
+      <input id="searchInput" type="text" placeholder="Gericht suchen: Huhn, Ente, Curry, Reis ..." />
+      <select id="categoryFilter">
+        <option value="all">Alle Kategorien</option>
+      </select>
+      <button id="resetBtn">Zurücksetzen</button>
+    </div>
+
+    <div class="summary">
+      <h2>🍽️ Speisekarte</h2>
+      <p id="resultCount"></p>
+    </div>
+
+    <div class="menu-grid" id="menuGrid"></div>
+    <div class="empty" id="emptyState">Keine Speisen gefunden.</div>
+  </main>
+
+  <div class="lightbox" id="lightbox">
+    <button class="close-btn" id="closeBtn">×</button>
+    <div class="lightbox-content">🍜</div>
+    <div class="lightbox-info" id="lightboxInfo"></div>
+  </div>
+
+  <footer>
+    <p>© 2026 Asia Wok Velbert | Öffnungszeiten: Mo-So 11:00-22:00</p>
+  </footer>
+
+  <script>
+    const menuItems = [
+      // Vorspeisen
+      { id: "1", category: "Vorspeisen", name: "Sauer-Scharfe Suppe", price: "2,50€", desc: "Klassische scharf-saure Suppe" },
+      { id: "2", category: "Vorspeisen", name: "Glasnudelsuppe mit Hühnerfleisch & Gemüse", price: "2,50€", desc: "Mit Glasnudeln, Huhn und Gemüse" },
+      { id: "3", category: "Vorspeisen", name: "Frühlingsrolle", price: "2,90€", desc: "Mit Hackfleisch, Zwiebeln, Möhren und Chinakohl" },
+      { id: "4", category: "Vorspeisen", name: "Vegetarische Frühlingsrollen (10 Stück)", price: "2,90€", desc: "Knusprige vegetarische Rollen" },
+      { id: "5", category: "Vorspeisen", name: "Curry-Ecken (10 Stück)", price: "2,90€", desc: "Knusprige Curry-Snacks" },
+      { id: "6", category: "Vorspeisen", name: "Krabbenchips", price: "2,50€", desc: "Knusprige Chips" },
+      { id: "7", category: "Vorspeisen", name: "Asia Salat", price: "3,50€", desc: "Frischer gemischter Salat" },
+      { id: "8", category: "Vorspeisen", name: "Tom Ka Gai Suppe", price: "3,20€", desc: "Hühnerfleisch, Kokosmilch, scharf" },
+      { id: "8a", category: "Vorspeisen", name: "Garnelen, gebacken", price: "3,50€", desc: "Knusprig gebackene Garnelen" },
+      { id: "8b", category: "Vorspeisen", name: "Tom Yam Gung Suppe", price: "3,50€", desc: "Garnelen, Kokosmilch, scharf" },
+      { id: "9", category: "Vorspeisen", name: "2 Hühnerfleischspieße", price: "3,50€", desc: "Herzhaft marinierte Spieße" },
+
+      // Nudelgerichte
+      { id: "11", category: "Nudelgerichte", name: "Gebratene Eiernudeln mit vegetarischem Gemüse", price: "4,90€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "12", category: "Nudelgerichte", name: "Gebratene Eiernudeln mit Hühnerfleisch", price: "5,90€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "13", category: "Nudelgerichte", name: "Gebratene Eiernudeln mit knuspriger Ente", price: "7,90€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "14", category: "Nudelgerichte", name: "Gebratene Eiernudeln mit Schweinefleisch", price: "5,90€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "15", category: "Nudelgerichte", name: "Gebratene Eiernudeln mit Rindfleisch", price: "6,90€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "16", category: "Nudelgerichte", name: "Gebratene Eiernudeln mit panierter Hühnerbrust", price: "6,50€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "17", category: "Nudelgerichte", name: "Gebratene Eiernudeln mit Hühner-, Schweine- und Rindfleisch", price: "6,90€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "18", category: "Nudelgerichte", name: "Bami Goreng", price: "6,90€", desc: "Mit Hühnerfleisch, Shrimps und Curry" },
+      { id: "19", category: "Nudelgerichte", name: "Gebratene Eiernudeln mit knusprigem Hähnchen", price: "6,90€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "20", category: "Nudelgerichte", name: "Gebratene Eiernudeln mit Garnelen", price: "7,90€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+
+      // Reisgerichte
+      { id: "21", category: "Reisgerichte", name: "Gebratener Eierreis mit vegetarischem Gemüse", price: "4,90€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "22", category: "Reisgerichte", name: "Gebratener Eierreis mit Hühnerfleisch", price: "6,50€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "23", category: "Reisgerichte", name: "Gebratener Eierreis mit knuspriger Ente", price: "8,50€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "24", category: "Reisgerichte", name: "Gebratener Eierreis mit Schweinefleisch", price: "6,90€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "25", category: "Reisgerichte", name: "Gebratener Eierreis mit Rindfleisch", price: "7,50€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "26", category: "Reisgerichte", name: "Gebratener Eierreis mit panierter Hühnerbrust", price: "7,50€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "27", category: "Reisgerichte", name: "Gebratener Eierreis mit Hühner-, Schweine- und Rindfleisch", price: "7,50€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "28", category: "Reisgerichte", name: "Nasi Goreng", price: "7,50€", desc: "Mit Hühnerfleisch, Shrimps und Curry" },
+      { id: "29", category: "Reisgerichte", name: "Gebratener Eierreis mit knusprigem Hähnchen", price: "7,50€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+      { id: "30", category: "Reisgerichte", name: "Gebratener Eierreis mit Garnelen", price: "8,50€", desc: "Mit Bambussprossen, Sojabohnenkeimlingen und verschiedenem Gemüse" },
+
+      // Süß-Sauer
+      { id: "33", category: "Süß-Sauer", name: "Knusprige Ente süß-sauer", price: "8,90€", desc: "Mit Bambussprossen, Ananas und Süß-Sauer-Sauce, dazu Reis" },
+      { id: "36", category: "Süß-Sauer", name: "Panierte Hühnerbrust süß-sauer", price: "7,50€", desc: "Mit Bambussprossen, Ananas und Süß-Sauer-Sauce, dazu Reis" },
+      { id: "37", category: "Süß-Sauer", name: "Gebackenes Fischfilet süß-sauer", price: "7,90€", desc: "Mit Bambussprossen, Ananas und Süß-Sauer-Sauce, dazu Reis" },
+      { id: "38", category: "Süß-Sauer", name: "Gebackene Garnelen süß-sauer", price: "8,90€", desc: "Mit Bambussprossen, Ananas und Süß-Sauer-Sauce, dazu Reis" },
+      { id: "39", category: "Süß-Sauer", name: "Knuspriges Hähnchen süß-sauer", price: "7,90€", desc: "Mit Bambussprossen, Ananas und Süß-Sauer-Sauce, dazu Reis" },
+
+      // Curry
+      { id: "41", category: "Curry-Gerichte", name: "Vegetarisches Gemüse Curry", price: "5,90€", desc: "Verschiedenes gebratenes Gemüse, Kokosmilch, Curry, dazu Reis" },
+      { id: "42", category: "Curry-Gerichte", name: "Hühnerfleisch Curry", price: "7,50€", desc: "Mit Kokosmilch, Curry und Reis" },
+      { id: "43", category: "Curry-Gerichte", name: "Knusprige Ente Curry", price: "8,90€", desc: "Mit Kokosmilch, Curry und Reis" },
+      { id: "44", category: "Curry-Gerichte", name: "Schweinefleisch Curry", price: "7,50€", desc: "Mit Kokosmilch, Curry und Reis" },
+      { id: "45", category: "Curry-Gerichte", name: "Rindfleisch Curry", price: "7,90€", desc: "Mit Kokosmilch, Curry und Reis" },
+      { id: "46", category: "Curry-Gerichte", name: "Panierte Hühnerbrust Curry", price: "7,50€", desc: "Mit Kokosmilch, Curry und Reis" },
+      { id: "47", category: "Curry-Gerichte", name: "Gebackenes Fischfilet Curry", price: "7,90€", desc: "Mit Kokosmilch, Curry und Reis" },
+      { id: "48", category: "Curry-Gerichte", name: "Gebratene Garnelen Curry", price: "8,90€", desc: "Mit Kokosmilch, Curry und Reis" },
+      { id: "49", category: "Curry-Gerichte", name: "Knuspriges Hähnchen Curry", price: "7,90€", desc: "Mit Kokosmilch, Curry und Reis" },
+      { id: "50", category: "Curry-Gerichte", name: "Tofu Curry", price: "6,90€", desc: "Mit Kokosmilch, Curry und Reis" },
+
+      // Chop Suey
+      { id: "51", category: "Chop Suey", name: "Vegetarisches Gemüse Chop Suey", price: "5,90€", desc: "Verschiedenes gebratenes Gemüse, dazu Reis" },
+      { id: "52", category: "Chop Suey", name: "Hühnerfleisch Chop Suey", price: "7,50€", desc: "Mit verschiedenem Gemüse, dazu Reis" },
+      { id: "53", category: "Chop Suey", name: "Knusprige Ente Chop Suey", price: "8,90€", desc: "Mit verschiedenem Gemüse, dazu Reis" },
+      { id: "54", category: "Chop Suey", name: "Schweinefleisch Chop Suey", price: "7,50€", desc: "Mit verschiedenem Gemüse, dazu Reis" },
+      { id: "55", category: "Chop Suey", name: "Rindfleisch Chop Suey", price: "7,90€", desc: "Mit verschiedenem Gemüse, dazu Reis" },
+      { id: "56", category: "Chop Suey", name: "Panierte Hühnerbrust Chop Suey", price: "7,50€", desc: "Mit verschiedenem Gemüse, dazu Reis" },
+      { id: "57", category: "Chop Suey", name: "Gebackenes Fischfilet Chop Suey", price: "7,90€", desc: "Mit verschiedenem Gemüse, dazu Reis" },
+      { id: "58", category: "Chop Suey", name: "Gebratene Garnelen Chop Suey", price: "8,90€", desc: "Mit verschiedenem Gemüse, dazu Reis" },
+      { id: "59", category: "Chop Suey", name: "Knuspriges Hähnchen Chop Suey", price: "7,90€", desc: "Mit verschiedenem Gemüse, dazu Reis" },
+      { id: "60", category: "Chop Suey", name: "Tofu Chop Suey", price: "6,90€", desc: "Mit verschiedenem Gemüse, dazu Reis" },
+
+      // Thai
+      { id: "61", category: "Thailändische Gerichte", name: "Vegetarisches Gemüse Thai-Curry", price: "5,90€", desc: "Thai-Curry mit Gemüse, Kokosmilch (scharf), dazu Reis" },
+      { id: "62", category: "Thailändische Gerichte", name: "Hühnerfleisch Thai-Curry", price: "7,50€", desc: "Thai-Curry mit Kokosmilch (scharf), dazu Reis" },
+      { id: "63", category: "Thailändische Gerichte", name: "Knusprige Ente Thai-Curry", price: "8,90€", desc: "Thai-Curry mit Kokosmilch (scharf), dazu Reis" },
+      { id: "64", category: "Thailändische Gerichte", name: "Schweinefleisch Thai-Curry", price: "7,50€", desc: "Thai-Curry mit Kokosmilch (scharf), dazu Reis" },
+      { id: "65", category: "Thailändische Gerichte", name: "Rindfleisch Thai-Curry", price: "7,90€", desc: "Thai-Curry mit Kokosmilch (scharf), dazu Reis" },
+      { id: "66", category: "Thailändische Gerichte", name: "Panierte Hühnerbrust Thai-Curry", price: "7,50€", desc: "Thai-Curry mit Kokosmilch (scharf), dazu Reis" },
+      { id: "67", category: "Thailändische Gerichte", name: "Gebackenes Fischfilet Thai-Curry", price: "7,90€", desc: "Thai-Curry mit Kokosmilch (scharf), dazu Reis" },
+      { id: "68", category: "Thailändische Gerichte", name: "Gebratene Garnelen Thai-Curry", price: "8,90€", desc: "Thai-Curry mit Kokosmilch (scharf), dazu Reis" },
+      { id: "69", category: "Thailändische Gerichte", name: "Knuspriges Hähnchen Thai-Curry", price: "7,90€", desc: "Thai-Curry mit Kokosmilch (scharf), dazu Reis" },
+      { id: "70", category: "Thailändische Gerichte", name: "Tofu Thai-Curry", price: "6,90€", desc: "Thai-Curry mit Kokosmilch (scharf), dazu Reis" },
+
+      // Spezialitäten
+      { id: "72", category: "Spezialitäten", name: "Sate / 4 Hühnerfleischspieße", price: "8,50€", desc: "Nach indonesischer Art mit Erdnuss-Sauce" },
+      { id: "73", category: "Spezialitäten", name: "Panierte Hühnerbrust mit Erdnuss-Sauce", price: "7,50€", desc: "Mit verschiedenem Gemüse und Erdnuss-Sauce" },
+      { id: "74", category: "Spezialitäten", name: "Knusprig gebratene Ente mit Erdnuss-Sauce", price: "8,90€", desc: "Mit verschiedenem Gemüse und Erdnuss-Sauce" },
+      { id: "75", category: "Spezialitäten", name: "Gebratenes Schweinefleisch nach Szechuan Art", price: "7,50€", desc: "Würzig zubereitet, dazu Reis" },
+      { id: "76", category: "Spezialitäten", name: "Gebratenes Rindfleisch mit Zwiebeln, Paprika, Möhren", price: "7,50€", desc: "Herzhaft gebraten, dazu Reis" },
+      { id: "77", category: "Spezialitäten", name: "Gebratenes Rindfleisch mit Glasnudeln, Morcheln und Bambussprossen", price: "7,50€", desc: "Kräftig gewürzt, dazu Reis" },
+      { id: "78", category: "Spezialitäten", name: "Gebratenes Schweinefleisch mit Zwiebeln, Bambussprossen und Knoblauch", price: "6,50€", desc: "Scharf, dazu Reis" },
+      { id: "79", category: "Spezialitäten", name: "Knuspriges Hähnchen mit Gemüse & Erdnuss-Sauce", price: "6,90€", desc: "Mit verschiedenem Gemüse und Erdnuss-Sauce" },
+
+      // China-Box
+      { id: "81", category: "China-Box", name: "Gebratene Nudeln & panierte Hühnerbrust", price: "4,90€", desc: "Praktische Box zum Mitnehmen" },
+      { id: "82", category: "China-Box", name: "Gebratener Eierreis & panierte Hühnerbrust", price: "5,50€", desc: "Praktische Box zum Mitnehmen" },
+
+      // Verschiedene Gerichte
+      { id: "83", category: "Verschiedene Gerichte", name: "Knusprige Ente", price: "8,50€", desc: "Mit Champignons und Spargel, dazu Reis" },
+      { id: "84", category: "Verschiedene Gerichte", name: "Gebratenes Schweinefleisch", price: "7,50€", desc: "Mit Champignons und Spargel, dazu Reis" },
+      { id: "85", category: "Verschiedene Gerichte", name: "Gebratenes Rindfleisch", price: "7,90€", desc: "Mit Champignons und Spargel, dazu Reis" },
+      { id: "86", category: "Verschiedene Gerichte", name: "Panierte Hühnerbrust", price: "7,50€", desc: "Mit Champignons und Spargel, dazu Reis" },
+      { id: "87", category: "Verschiedene Gerichte", name: "Gebackenes Fischfilet", price: "7,50€", desc: "Mit Champignons und Spargel, dazu Reis" },
+      { id: "88", category: "Verschiedene Gerichte", name: "Gebratene Garnelen", price: "8,50€", desc: "Mit Champignons und Spargel, dazu Reis" },
+      { id: "89", category: "Verschiedene Gerichte", name: "Knuspriges Hähnchen", price: "7,50€", desc: "Mit Champignons und Spargel, dazu Reis" },
+
+      // Heißer Topf
+      { id: "91", category: "Heißer Topf", name: "Gebratenes Hühnerfleisch", price: "7,90€", desc: "Mit verschiedenem Gemüse, im heißen Topf serviert" },
+      { id: "92", category: "Heißer Topf", name: "Gebratenes Schweinefleisch", price: "7,90€", desc: "Mit verschiedenem Gemüse, im heißen Topf serviert" },
+      { id: "93", category: "Heißer Topf", name: "Gebratenes Rindfleisch", price: "8,50€", desc: "Mit verschiedenem Gemüse, im heißen Topf serviert" },
+      { id: "94", category: "Heißer Topf", name: "Gebratene Garnelen", price: "8,90€", desc: "Mit verschiedenem Gemüse, im heißen Topf serviert" },
+      { id: "95", category: "Heißer Topf", name: "3 Sorten Fleisch mit verschiedenem Gemüse", price: "8,90€", desc: "Im heißen Topf serviert" },
+      { id: "96", category: "Heißer Topf", name: "Gebratene Ente", price: "8,90€", desc: "Mit verschiedenem Gemüse, im heißen Topf serviert" },
+
+      // Nachtisch
+      { id: "97", category: "Nachtisch", name: "Lychee Früchte", price: "3,50€", desc: "Fruchtiger Nachtisch" },
+      { id: "98", category: "Nachtisch", name: "Gebackene Banane mit Honig", price: "2,50€", desc: "Warmer süßer Nachtisch" },
+      { id: "99", category: "Nachtisch", name: "Gebackene Ananas mit Honig", price: "2,50€", desc: "Warmer süßer Nachtisch" },
+      { id: "100", category: "Nachtisch", name: "Longan Früchte", price: "3,50€", desc: "Fruchtiger Nachtisch" }
+    ];
+
+    const menuGrid = document.getElementById("menuGrid");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const resetBtn = document.getElementById("resetBtn");
+    const resultCount = document.getElementById("resultCount");
+    const emptyState = document.getElementById("emptyState");
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxInfo = document.getElementById("lightboxInfo");
+    const closeBtn = document.getElementById("closeBtn");
+
+    function initCategories() {
+      const categories = [...new Set(menuItems.map(item => item.category))];
+      categories.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        categoryFilter.appendChild(option);
+      });
+    }
+
+    function filterItems() {
+      const search = searchInput.value.trim().toLowerCase();
+      const category = categoryFilter.value;
+
+      return menuItems.filter(item => {
+        const text = `${item.id} ${item.name} ${item.desc} ${item.category}`.toLowerCase();
+        const matchesSearch = text.includes(search);
+        const matchesCategory = category === "all" || item.category === category;
+        return matchesSearch && matchesCategory;
+      });
+    }
+
+    function renderItems() {
+      const items = filterItems();
+      menuGrid.innerHTML = "";
+      resultCount.textContent = `${items.length} Gerichte`;
+
+      if (!items.length) {
+        emptyState.style.display = "block";
+        return;
+      }
+
+      emptyState.style.display = "none";
+
+      items.forEach(item => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.tabIndex = 0;
+
+        card.innerHTML = `
+          <div class="card-image">🍜</div>
+          <div class="card-content">
+            <div class="card-top">
+              <h3>${item.id}. ${item.name}</h3>
+              <div class="price">${item.price}</div>
+            </div>
+            <div class="desc">${item.desc}</div>
+            <div class="meta">
+              <span class="badge">${item.category}</span>
+            </div>
+          </div>
+        `;
+
+        card.addEventListener("click", () => openLightbox(item));
+        card.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openLightbox(item);
+          }
+        });
+
+        menuGrid.appendChild(card);
+      });
+    }
+
+    function openLightbox(item) {
+      lightboxInfo.innerHTML = `
+        <strong>${item.id}. ${item.name}</strong><br>
+        ${item.desc}<br>
+        <strong>${item.price}</strong>
+      `;
+      lightbox.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    searchInput.addEventListener("input", renderItems);
+    categoryFilter.addEventListener("change", renderItems);
+    resetBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      categoryFilter.value = "all";
+      renderItems();
+    });
+
+    closeBtn.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeLightbox();
+    });
+
+    initCategories();
+    renderItems();
+  </script>
+</body>
+</html>
